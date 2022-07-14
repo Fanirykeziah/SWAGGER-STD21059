@@ -1,16 +1,18 @@
 openapi: 3.0.1
 info:
   title: STD21059 API
-  description: 'Global description of my API'
+  description: My first API
   version: 1.0.0
+  
 servers:
- - url: https://STD21059.com
-tags: 
- - name: Students
-   
- - name: Courses
+  - url: https://STD21059.com
+  
+tags:
+  - name: Students
+  - name: Courses
+  
 paths:
- /students:
+  /students:
     get:
       tags:
         - Students
@@ -18,21 +20,21 @@ paths:
       summary: Get all students
       description: Get all students with details
       responses:
-        200: 
+        '200':
           description: List of students
           content:
             application/json:
               schema:
                 type: array
-                items: 
+                items:
                   $ref: '#/components/schemas/Student'
-        400:
+        '400':
           description: Bad request
-    post: 
+    post:
       tags:
         - Students
       operationId: createStudent
-      summary : Create new student
+      summary: Create new student
       description: Create new student
       requestBody:
         description: Student to be created
@@ -42,79 +44,94 @@ paths:
               $ref: '#/components/schemas/CreateStudent'
         required: true
       responses:
-        200:
+        '200':
           description: List of students
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Student'
-        400:
+        '400':
           description: Bad request
- /courses:
+  /courses:
     get:
       tags:
         - Courses
-      operationId: getCourses
-      summary: Get all courses
-      description: Get all courses with details
+      summary: Get all list courses
+      description: Get courses
+      operationId: get list courses\
       parameters:
-      - name: page
-        in: path
-        description: 
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - name: page_size
-        in: path
-        description: 
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: page-size
+          in: query
+          required: true
+          schema:
+            type: integer
       responses:
-        200: 
+        '200':
           description: List of courses
           content:
             application/json:
               schema:
                 type: array
-                items: 
+                items:
                   $ref: '#/components/schemas/Courses'
-        400:
+        '400':
           description: Bad request
-          content: {code:400_BAD_REQUEST}
+          content:
+            application/json:
+              schema:
+                example:
+                  code: 400_bad_request
+                  message: Parameter are missing
     post:
-      tags:
-        - Courses
-      summary: Add a new courses to the store
-      operationId: addCourses
- /courses/{id}:
-    get:
         tags:
           - Courses
-        operationId: getCourses
-        summary: Get one courses
-        description: Get courses with details
-        parameters:
-        - name: Id
-          in: path
-          description: ID of courses
+        operationId: createCourses
+        summary: Create new courses
+        description: Create new student
+        requestBody:
+          description: Courses to be created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCourses'
           required: true
-          schema:
-            type: integer
-            format: int64
         responses:
-          200: 
-            description: List of courses
+          '200':
+            description: List of Courses
             content:
               application/json:
                 schema:
-                  type: array
-                  items: 
-                    $ref: '#/components/schemas/Courses'
-          400:
-            description: Bad request
+                  $ref: '#/components/schemas/Courses'
+          '400':
+            description: Bad request                
+  /courses/{id}:                
+    get:
+      tags:
+        - Courses
+      summary: Get Specified courses
+      description: Get Specified courses
+      operationId: Get Specified courses
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of courses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoursesId'
+        '400':
+          description: Bad request
+  
 components:
   schemas:
     CreateStudent:
@@ -122,11 +139,11 @@ components:
       properties:
         name:
           type: string
-          example: "Rakoto"
+        title : 
+          type : string 
         birth_date:
           type: string
           format: date
-          example: "2022-01-01"
     Student:
       allOf:
         - $ref: '#/components/schemas/CreateStudent'
@@ -140,7 +157,28 @@ components:
       properties:
         name:
           type: string
-        teacher:
+        title:
           type: string
-        createDatetime:
-          type: date
+        created_birth:
+          type: string
+          format: date
+        id:
+          type: integer
+          example: 10
+    Courses:
+      allOf:
+        - $ref: '#/components/schemas/CreateCourses'
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+    CoursesId:
+      allOf:
+        - $ref: '#/components/schemas/CreateCourses'
+      properties:
+        id:
+          type: integer
+          example: 10
+    
+          
